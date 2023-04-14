@@ -54,6 +54,7 @@ import subprocess
 import pickle
 #import encript
 import base64
+import LC3systems
 
 from labnavigationtoolbar import CustomNavigationToolbar
            
@@ -162,6 +163,13 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
                 
         self.init = 1
 
+        ######################## LabControl 3 stuff:
+        self.sysList = []   # A list that contains the LC3systems objects and the corresponding data.
+        self.sysCurrentIndex = 0
+        self.addSystem(1)
+
+        ########################
+
         # Error messages
         self.expressions_errors = {
             'r(t)': {
@@ -217,6 +225,8 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.verticalSliderK.valueChanged.connect(self.onSliderMove)
         self.comboBoxSys.currentIndexChanged.connect(self.onChangeSystem)
         self.tabWidget.currentChanged.connect(self.onTabChange)
+        # Lists:
+        self.listSystem.itemClicked.connect(self.onSysItemClicked)
         # Spinboxes:
         self.doubleSpinBoxKmax.valueChanged.connect(self.onKmaxChange)
         self.doubleSpinBoxKmin.valueChanged.connect(self.onKminChange)
@@ -239,7 +249,6 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.doubleSpinBoxDeltaRtime.valueChanged.connect(self.onRvarInstChange)
         self.doubleSpinBoxTk.valueChanged.connect(self.onTkChange)
         self.spinBoxPtTk.valueChanged.connect(self.onPointsTkChange)
-
         # LineEdits:
         self.lineEditRvalue.textEdited.connect(self.onRvalueChange)
         self.lineEditWvalue.textEdited.connect(self.onWvalueChange)
@@ -264,6 +273,9 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
         self.btnBodeClear.clicked.connect(self.onBtnBodeClear)
         self.btnPlotNyquist.clicked.connect(self.onBtnNyquist)
         self.btnClearNyquist.clicked.connect(self.onBtnNyquistClear)
+        self.btnSysAdd.clicked.connect(self.onBtnSysAdd)
+        self.btnSysRemove.clicked.connect(self.onBtnSysRemove)
+        self.btnSysClear.clicked.connect(self.onBtnSysClear)
         # Actions
         self.actionHelp.triggered.connect(self.onAboutAction)
         self.actionCalc.triggered.connect(self.onCalcAction)
@@ -295,6 +307,38 @@ class LabControl3(QtWidgets.QMainWindow):#,MainWindow.Ui_MainWindow):
 
     def _set_expression_active(self, expr, active):
         self.expressions_errors[expr]['active'] = active
+    
+    ########### LabControl 3 stuff:
+    def onSysItemClicked(self,item):
+        """
+        User clicked in the list of stored system data.
+        """
+        print(item.text())
+        self.sysCurrentIndex = self.listSystem.currentRow()
+        print('Sys index: {i}'.format(i=self.sysCurrentIndex))
+    
+    def addSystem(self,systype):
+        index = len(self.sysList)
+        sys = LC3systems.LTIsystem(index,systype)
+        self.sysList.append(sys)
+        self.listSystem.addItem(sys.Name)
+        self.listSystem.setCurrentRow(index)
+    
+    def onBtnSysAdd(self):
+        self.addSystem(self.currentComboIndex + 1)
+        self.sysCurrentIndex = self.listSystem.currentRow()
+
+    def onBtnSysRemove(self):
+        if (self.sysCurrentIndex == 0):
+            QtWidgets.QMessageBox.information(self,_translate("MainWindow", "Atenção!", None), _translate("MainWindow", "Ao menos um sistema deve ser mantido na lista. Remoção não efetuada.", None))
+            return
+        self.listSystem.takeItem(self.sysCurrentIndex)
+        self.sysCurrentIndex = self.listSystem.currentRow()
+
+    def onBtnSysClear(self):
+        ## To do
+        pass
+    #################################   
     
     def feedbackOpen(self):
         """Open Feedback """ 

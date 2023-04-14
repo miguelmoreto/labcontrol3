@@ -1093,11 +1093,6 @@
                 <height>16777215</height>
                </size>
               </property>
-              <item>
-               <property name="text">
-                <string>1: LTI1</string>
-               </property>
-              </item>
              </widget>
             </item>
             <item>
@@ -1131,7 +1126,10 @@
                 <number>0</number>
                </property>
                <item>
-                <widget class="QToolButton" name="toolButton">
+                <widget class="QToolButton" name="btnSysAdd">
+                 <property name="toolTip">
+                  <string>Adiciona um novo sistema à lista, copiando os dados dos sistema atual.</string>
+                 </property>
                  <property name="text">
                   <string>...</string>
                  </property>
@@ -1142,7 +1140,10 @@
                 </widget>
                </item>
                <item>
-                <widget class="QToolButton" name="toolButton_2">
+                <widget class="QToolButton" name="btnSysRemove">
+                 <property name="toolTip">
+                  <string>Remove da lisa o sistema selecionado</string>
+                 </property>
                  <property name="text">
                   <string>...</string>
                  </property>
@@ -1153,9 +1154,12 @@
                 </widget>
                </item>
                <item>
-                <widget class="QToolButton" name="toolButton_3">
+                <widget class="QToolButton" name="btnSysClear">
+                 <property name="toolTip">
+                  <string>Limpa a lista de sistemas armazenados, mantendo apenas o sistema inicial.</string>
+                 </property>
                  <property name="text">
-                  <string>...</string>
+                  <string>Add</string>
                  </property>
                  <property name="icon">
                   <iconset resource="images.qrc">

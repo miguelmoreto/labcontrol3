@@ -36,9 +36,9 @@ class LTIsystem:
     #polyDnum = np.poly1d([1]) # numerator polynomial of the direct loop transfer function
     #polyDden = np.poly1d([1]) # denominator polynomial of the direct loop transfer function
 
-    Type = 0    # system type.
+    Type = 1    # system type.
     Index = 0   # System index within a list.
-    Name = "LTI_0"
+    Name = ""
 
     # Inputs (reference and perturbation):
     Rt = '1'        # String with the r(t) input function.
@@ -55,7 +55,8 @@ class LTIsystem:
     Tmax = 10           # Time domain max simulation time.
     tfinal = 10         # Time domain simulation final time value.
     
-    Malha = 'Aberta'    # Feedback state (opened or closed)
+    Loop = 'open'       # Feedback loop state (open or closed)
+    Hide = False        # Hide system data (used for experimental system identification exercises)
     
     K = 1.0             # System gain.
     
@@ -89,10 +90,13 @@ class LTIsystem:
     y00 = np.array([0.0,0.0])    # Output initial value for 2 order system
     N = 0                        # Number of samples
 
-    def __init__(self):
+    def __init__(self,index,systype):
         """
         Init function. Updates
         """
+        self.Type = systype
+        self.Index = index
+        self.Name = '{i}: LTI_{t}'.format(i=index,t=systype)   # Format name string
         self.updateSystem()
 
     def updateSystem(self):
