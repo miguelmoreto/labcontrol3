@@ -104,10 +104,18 @@ class LTIsystem:
         self.C_tf = ct.tf(self.Cnum,self.Cden)
         self.H_tf = ct.tf(self.Hnum,self.Hden)
 
+        # Compute OpenLoop and ClosedLoop transfer functions accordingly with
+        # the system type.
         if (self.Type == 0):
             self.OLTF_r = self.K * self.G_tf
-            self.CLTF_r = (self.K * self.G_tf)/(1+self.K * self.G_tf)
+            self.CLTF_r = (self.K * self.G_tf)/(1+self.K * self.G_tf * self.H_tf)
+            self.OLTF_w = ct.tf(1,1)
+            self.CLTF_w = 1/(1+self.K * self.G_tf * self.H_tf)
+        elif (self.Type == 1):
+            self.OLTF_r = self.K * self.C_tf * self.G_tf
+            self.CLTF_r = (self.K * self.C_tf * self.G_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)
+            self.OLTF_w = ct.tf(1,1)
+            self.CLTF_w = 1/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)
         elif (self.Type == 2):
             self.OLTF_r = self.K * self.C_tf * self.G_tf
-            self.CLTF_r = (self.K * self.C_tf * self.G_tf)/(1 + self.K * self.C_tf * self.G_tf)
-        pass
+            self.CLTF_r = (self.K * self.C_tf * self.G_tf)/(1 + self.K * self.C_tf * self.G_tf * self.H_tf)
